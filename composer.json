@@ -18,6 +18,7 @@
         "php": "^8.4",
         "inertiajs/inertia-laravel": "^2.0",
         "jftecnologia/laravel-context": "^1.0",
+        "jftecnologia/laravel-exceptions": "^1.0",
         "jftecnologia/laravel-tracing": "^1.0",
         "laradumps/laradumps": "^5.0",
         "laravel/fortify": "^1.30",
