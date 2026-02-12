@@ -17,6 +17,7 @@
     "require": {
         "php": "^8.4",
         "inertiajs/inertia-laravel": "^2.0",
+        "jftecnologia/laravel-tracing": "^1.0",
         "laradumps/laradumps": "^5.0",
         "laravel/fortify": "^1.30",
         "laravel/framework": "^12.0",
