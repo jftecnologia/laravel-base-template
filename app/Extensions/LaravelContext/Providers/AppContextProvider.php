@@ -13,6 +13,7 @@ class AppContextProvider extends AppProvider
         return [
             'app' => [
                 'name' => config('app.name'),
+                'role' => config('app.role'),
                 'env' => config('app.env'),
                 'version' => config('app.version'),
                 'commit' => config('app.commit'),
