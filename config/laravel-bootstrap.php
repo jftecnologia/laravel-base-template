@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 return [
     'http' => [
-        'force_https' => env('LARAVEL_BOOTSTRAP_FORCE_HTTPS', false),
+        'force_https' => env('LARAVEL_BOOTSTRAP_FORCE_HTTPS', true),
         'force_https_environments' => explode(',', env('LARAVEL_BOOTSTRAP_FORCE_HTTPS_ENVIRONMENTS', 'production,staging')),
     ],
 
