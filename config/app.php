@@ -7,7 +7,7 @@ return [
 
     'version' => env('APP_VERSION', date('Ymd') . '-x-local'),
     'commit' => env('APP_COMMIT', 'x'),
-    'build_date' => env('APP_BUILD_DATE', '19700101000000'),
+    'build_date' => env('APP_BUILD_DATE', date('YmdHis')),
 
     'role' => env('APP_ROLE', 'app'),
 
