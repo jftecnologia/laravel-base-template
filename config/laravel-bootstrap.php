@@ -9,7 +9,7 @@ return [
     ],
 
     'models' => [
-        'unguarded' => env('LARAVEL_BOOTSTRAP_MODELS_UNGUARDED', false),
+        'unguarded' => env('LARAVEL_BOOTSTRAP_MODELS_UNGUARDED', true),
         'auto_eager_load' => env('LARAVEL_BOOTSTRAP_MODELS_AUTO_EAGER_LOAD', true),
         'send_violations_to_sentry' => env('LARAVEL_BOOTSTRAP_MODELS_SEND_VIOLATIONS_TO_SENTRY', true),
     ],
