@@ -18,7 +18,7 @@ class UpdateContext
      */
     public function handle(Request $request, Closure $next): Response
     {
-        LaravelContext::build();
+        LaravelContext::rebuild();
 
         return $next($request);
     }

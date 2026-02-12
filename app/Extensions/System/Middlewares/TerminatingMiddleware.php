@@ -6,7 +6,7 @@ namespace App\Extensions\System\Middlewares;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use JuniorFontenele\LaravelContext\Facades\LaravelContext;
 use Symfony\Component\HttpFoundation\Response;
 
 class TerminatingMiddleware
@@ -29,13 +29,11 @@ class TerminatingMiddleware
             default => 'unknown',
         };
 
-        Log::shareContext([
-            'response' => [
-                'content-type' => $response->headers->get('Content-Type'),
-                'type' => $responseType,
-                'status' => $response->getStatusCode(),
-                'size' => strlen($response->getContent() ?: ''),
-            ],
+        LaravelContext::set('response', [
+            'content-type' => $response->headers->get('Content-Type'),
+            'type' => $responseType,
+            'status' => $response->getStatusCode(),
+            'size' => strlen($response->getContent() ?: ''),
         ]);
     }
 }
