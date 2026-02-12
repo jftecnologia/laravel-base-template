@@ -12,6 +12,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Copy Environment File
+        run: cp .env.example .env
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -19,20 +22,11 @@ jobs:
           tools: composer:v2
           coverage: xdebug
 
-      - name: Cache composer packages
-        uses: actions/cache@v4
-        env:
-          cache-name: cache-composer-packages
-        with:
-          path: ~/.composer/cache/files
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-
       - name: Install Dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Generate Application Key
+        run: php artisan key:generate
 
       - name: Format PHP Code
         run: composer format
