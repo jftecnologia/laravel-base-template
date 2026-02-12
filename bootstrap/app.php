@@ -7,7 +7,6 @@ use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\System\AddContextToSentry;
 use App\Http\Middleware\System\AddSecurityHeaders;
-use App\Http\Middleware\System\AddTracingInformation;
 use App\Http\Middleware\System\SetUserLocale;
 use App\Http\Middleware\System\TerminatingMiddleware;
 use Illuminate\Foundation\Application;
@@ -31,7 +30,6 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->web(append: [
             SetUserLocale::class,
-            AddTracingInformation::class,
             AddContextToSentry::class,
             AddSecurityHeaders::class,
             HandleAppearance::class,
