@@ -66,6 +66,12 @@ return [
             'source' => JuniorFontenele\LaravelTracing\Tracings\Sources\RequestIdSource::class,
         ],
 
+        'app_version' => [
+            'enabled' => true,
+            'header' => env('LARAVEL_TRACING_APP_VERSION_HEADER', 'X-App-Version'),
+            'source' => App\Extensions\LaravelTracing\Tracings\AppVersionSource::class,
+        ],
+
     ],
 
     /*
