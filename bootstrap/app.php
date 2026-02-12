@@ -3,12 +3,11 @@
 declare(strict_types = 1);
 
 use App\Extensions\LaravelContext\Middlewares\UpdateContext;
-use App\Facades\System\AppException;
+use App\Extensions\System\Middlewares\AddSecurityHeaders;
+use App\Extensions\System\Middlewares\SetUserLocale;
+use App\Extensions\System\Middlewares\TerminatingMiddleware;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
-use App\System\Middlewares\AddSecurityHeaders;
-use App\System\Middlewares\SetUserLocale;
-use App\System\Middlewares\TerminatingMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -43,6 +42,4 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         Integration::handles($exceptions);
-
-        AppException::handles($exceptions);
     })->create();
