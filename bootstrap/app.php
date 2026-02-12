@@ -5,7 +5,6 @@ declare(strict_types = 1);
 use App\Facades\System\AppException;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
-use App\Http\Middleware\System\AddContextToSentry;
 use App\Http\Middleware\System\AddSecurityHeaders;
 use App\Http\Middleware\System\SetUserLocale;
 use App\Http\Middleware\System\TerminatingMiddleware;
@@ -34,7 +33,6 @@ return Application::configure(basePath: dirname(__DIR__))
             SetUserLocale::class,
             IncomingTracingMiddleware::class,
             OutgoingTracingMiddleware::class,
-            AddContextToSentry::class,
             AddSecurityHeaders::class,
             HandleAppearance::class,
             HandleInertiaRequests::class,
