@@ -7,6 +7,7 @@ namespace App\Http\Middleware;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use JuniorFontenele\LaravelTracing\Facades\LaravelTracing;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -50,8 +51,9 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'message' => fn () => $request->session()->get('message'),
             ],
-            'request_id' => session('request_id'),
-            'correlation_id' => session('correlation_id'),
+            'request_id' => LaravelTracing::get('request_id'),
+            'correlation_id' => LaravelTracing::get('correlation_id'),
+            'app_version' => LaravelTracing::get('app_version'),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }
