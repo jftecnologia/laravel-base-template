@@ -6,8 +6,8 @@ namespace App\Extensions\LaravelContext\Middlewares;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use JuniorFontenele\LaravelContext\Facades\LaravelContext;
+use Symfony\Component\HttpFoundation\Response;
 
 class UpdateContext
 {
