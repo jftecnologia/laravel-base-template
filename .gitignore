@@ -33,3 +33,6 @@ yarn-error.log
 /.phpstorm.meta.php
 laradumps.yaml
 .env.sentry-build-plugin
+.mcp.json
+composer.lock
+package-lock.json
