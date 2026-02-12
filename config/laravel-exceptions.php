@@ -7,7 +7,7 @@ return [
 
     'convert_exceptions' => env('LARAVEL_EXCEPTIONS_CONVERT_EXCEPTIONS', true),
 
-    'render_in_debug' => env('LARAVEL_EXCEPTIONS_RENDER_IN_DEBUG', false),
+    'render_in_debug' => env('LARAVEL_EXCEPTIONS_RENDER_IN_DEBUG', true),
 
     'delete_records_older_than_days' => 365,
 
