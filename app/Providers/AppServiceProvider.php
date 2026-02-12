@@ -18,8 +18,6 @@ use Sentry\Laravel\Integration;
 
 class AppServiceProvider extends ServiceProvider
 {
-    private array $context = [];
-
     /**
      * Register any application services.
      */

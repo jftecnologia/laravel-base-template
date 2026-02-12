@@ -2,6 +2,7 @@
 
 declare(strict_types = 1);
 
+use App\Extensions\LaravelContext\Middlewares\UpdateContext;
 use App\Facades\System\AppException;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
@@ -25,10 +26,6 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 
-        $middleware->append([
-            TerminatingMiddleware::class,
-        ]);
-
         $middleware->web(append: [
             SetUserLocale::class,
             IncomingTracingMiddleware::class,
@@ -37,6 +34,11 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleAppearance::class,
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
+            UpdateContext::class,
+        ]);
+
+        $middleware->append([
+            TerminatingMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

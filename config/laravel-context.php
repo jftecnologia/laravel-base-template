@@ -1,6 +1,9 @@
 <?php
 
 declare(strict_types = 1);
+use App\Extensions\LaravelContext\Providers\AppContextProvider;
+use App\Extensions\LaravelContext\Providers\CorrelationContextProvider;
+use App\Extensions\LaravelContext\Providers\RequestContextProvider;
 
 return [
     /*
@@ -20,9 +23,10 @@ return [
     */
     'providers' => [
         JuniorFontenele\LaravelContext\Providers\TimestampProvider::class,
-        JuniorFontenele\LaravelContext\Providers\AppProvider::class,
+        AppContextProvider::class,
         JuniorFontenele\LaravelContext\Providers\HostProvider::class,
-        JuniorFontenele\LaravelContext\Providers\RequestProvider::class,
+        CorrelationContextProvider::class,
+        RequestContextProvider::class,
         JuniorFontenele\LaravelContext\Providers\UserProvider::class,
 
         // Add your custom providers here
