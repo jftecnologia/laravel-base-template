@@ -13,6 +13,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
+use JuniorFontenele\LaravelTracing\Middleware\IncomingTracingMiddleware;
+use JuniorFontenele\LaravelTracing\Middleware\OutgoingTracingMiddleware;
 use Sentry\Laravel\Integration;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -30,6 +32,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->web(append: [
             SetUserLocale::class,
+            IncomingTracingMiddleware::class,
+            OutgoingTracingMiddleware::class,
             AddContextToSentry::class,
             AddSecurityHeaders::class,
             HandleAppearance::class,
