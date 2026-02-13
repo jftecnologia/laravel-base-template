@@ -25,6 +25,11 @@ return new class extends Migration
             $table->string('error_id')->nullable()->index();
             $table->string('app_env')->nullable()->index();
             $table->boolean('app_debug')->nullable()->index();
+            $table->string('app_name')->nullable()->index();
+            $table->string('app_version')->nullable()->index();
+            $table->string('app_commit')->nullable()->index();
+            $table->string('request_id')->nullable()->index();
+            $table->string('correlation_id')->nullable()->index();
             $table->string('host_name')->nullable();
             $table->string('host_ip')->nullable();
             $table->foreignId('user_id')->nullable()->constrained(config('laravel-exceptions.channels_settings.database.user_model_table', 'users'))->nullOnDelete();

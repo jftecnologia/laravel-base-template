@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types = 1);
+use App\Extensions\LaravelExceptions\Channels\Database;
 use App\Extensions\LaravelExceptions\Channels\LaravelContextChannel;
 
 return [
@@ -13,16 +14,16 @@ return [
     'delete_records_older_than_days' => 365,
 
     'context_providers' => [
-        JuniorFontenele\LaravelExceptions\Providers\AppExceptionContextProvider::class,
-        JuniorFontenele\LaravelExceptions\Providers\AppContextProvider::class,
-        JuniorFontenele\LaravelExceptions\Providers\HostContextProvider::class,
-        JuniorFontenele\LaravelExceptions\Providers\UserContextProvider::class,
-        JuniorFontenele\LaravelExceptions\Providers\ExceptionContextProvider::class,
-        JuniorFontenele\LaravelExceptions\Providers\PreviousExceptionContextProvider::class,
+        // JuniorFontenele\LaravelExceptions\Providers\AppExceptionContextProvider::class,
+        // JuniorFontenele\LaravelExceptions\Providers\AppContextProvider::class,
+        // JuniorFontenele\LaravelExceptions\Providers\HostContextProvider::class,
+        // JuniorFontenele\LaravelExceptions\Providers\UserContextProvider::class,
+        // JuniorFontenele\LaravelExceptions\Providers\ExceptionContextProvider::class,
+        // JuniorFontenele\LaravelExceptions\Providers\PreviousExceptionContextProvider::class,
     ],
 
     'channels' => [
-        'database' => JuniorFontenele\LaravelExceptions\Channels\Database::class,
+        'database' => Database::class,
         'laravel_log' => LaravelContextChannel::class,
     ],
 
