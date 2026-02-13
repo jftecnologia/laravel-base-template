@@ -1,6 +1,6 @@
-# Code Standards & Development Philosophy
+# Code Standards & Conventions
 
-**Purpose**: Define code quality standards, architectural principles, and development philosophy for this Laravel package.
+**Purpose**: Define code quality standards, conventions, and development philosophy for this Laravel application.
 
 ---
 
@@ -8,231 +8,272 @@
 
 ### Core Principles
 
-- **No DDD** (no aggregates, no repositories, no over-engineering)
+- **No DDD** — no aggregates, repositories, or domain layers
 - **Low bureaucracy, high clarity**
 - **Simplicity and explicitness over abstraction**
 - **Configuration over hard-coding**
-- **Plug-and-play mindset** (features should be easy to enable/disable)
+- **Plug-and-play mindset** — features should be easy to enable/disable
 
 ### Architecture Goals
 
-Code must be:
+Code must be: **Extensible**, **Pluggable**, **Testable**, **Maintainable**.
 
-- ✅ **Extensible** – easy to add new features
-- ✅ **Pluggable** – features can be enabled/disabled
-- ✅ **Testable** – business logic is unit-testable
-- ✅ **Maintainable** – readable and clear for future developers
-
----
-
-## SOLID Principles (Pragmatic Application)
-
-Follow SOLID, but pragmatically:
-
-- **Single Responsibility**: Each class has one clear purpose
-- **Open/Closed**: Extend via interfaces/configuration, not modification
-- **Liskov Substitution**: Subtypes must be interchangeable
-- **Interface Segregation**: Small, focused interfaces
-- **Dependency Inversion**: Depend on abstractions, not concretions
-
-**Important**: Apply SOLID to improve clarity and extensibility, not to create unnecessary layers.
-
----
-
-## Code Style & Quality Tools
-
-### PSR Standards
-
-- **PSR-12**: Code style standard
-- **PSR-4**: Autoloading standard
-
-### Quality Tools
-
-**All tools are configured and must pass before commits:**
-
-1. **Pint** (Laravel's opinionated PHP-CS-Fixer)
-   - Config: `pint.json`
-   - Enforces PSR-12 + Laravel conventions
-   - Auto-fixes code style
-
-2. **PHPStan** (via Larastan)
-   - Level: **5** (strict but pragmatic)
-   - Analyzes code for type safety and potential bugs
-   - Config: `phpstan.neon`
-
-3. **Rector** (PHP automated refactoring)
-   - Enforces modern PHP patterns
-   - Auto-upgrades deprecated code
-   - Config: `rector.php`
-
-### Running Quality Checks
-
-**Single command to run all checks:**
-
-```bash
-composer lint
-```
-
-This runs:
-1. `composer format` (Pint)
-2. `composer rector` (Rector)
-3. `composer analyze` (PHPStan/Larastan)
-
-**All checks must pass before committing.**
+SOLID applied pragmatically — improve clarity, not add layers.
 
 ---
 
 ## Code Organization
 
-### Class Responsibilities
+### Where Things Go
 
-- **Keep classes small and focused**
-- **Clear, single responsibility per class**
-- **Avoid "god objects" or classes that do too much**
+| What                          | Where                          | Example                              |
+| ----------------------------- | ------------------------------ | ------------------------------------ |
+| **Actions** (single-purpose)  | `app/Actions/<Domain>/`        | `app/Actions/Fortify/CreateNewUser.php` |
+| **Services** (multi-step logic)| `app/Services/`               | `app/Services/PaymentService.php`    |
+| **Enums**                     | `app/Enums/`                   | `app/Enums/LogLevel.php`            |
+| **Extensions** (package customization) | `app/Extensions/<Package>/` | `app/Extensions/ActivityLog/Activity.php` |
+| **Controllers**               | `app/Http/Controllers/`        | Grouped by domain in subfolders     |
+| **Form Requests**             | `app/Http/Requests/`           | `app/Http/Requests/Settings/ProfileUpdateRequest.php` |
+| **Middleware**                 | `app/Http/Middleware/`         | App-level only                       |
+| **Models**                    | `app/Models/`                  | One model per file                   |
+| **Providers**                 | `app/Providers/`               | Service providers                    |
+| **Jobs**                      | `app/Jobs/`                    | Queued jobs                          |
+| **Events / Listeners**        | `app/Events/`, `app/Listeners/`| Event-driven features               |
+| **Notifications**             | `app/Notifications/`           | Email, SMS, database notifications  |
+| **Policies**                  | `app/Policies/`                | Authorization policies              |
+| **Helpers**                   | `app/Support/helpers.php`      | Global helper functions             |
+| **Exceptions**                | Created via `php artisan make:app-exception` | Uses `jftecnologia/laravel-exceptions` |
+
+### Actions vs Services
+
+- **Action**: single purpose, one public method (`execute`). Use for discrete operations.
+- **Service**: coordinates multiple steps or has multiple related methods. Use when logic requires orchestration.
+- **Rule**: if it does one thing, it's an Action. If it coordinates, it's a Service.
+
+### Extensions Directory
+
+`app/Extensions/` is for **non-domain customizations** of installed packages:
+
+```
+app/Extensions/
+├── ActivityLog/          # Spatie ActivityLog model overrides
+├── LaravelContext/       # Custom context providers and middleware
+├── LaravelExceptions/    # Custom exception channels
+├── LaravelTracing/       # Custom tracing sources
+└── System/               # System-level middleware (security headers, locale, etc.)
+```
+
+Never put business/domain logic here — only package integration customizations.
+
+---
+
+## PHP Standards
+
+### Code Style
+
+- **PSR-12** code style (enforced by Pint)
+- **PSR-4** autoloading
+- Always use curly braces for control structures, even single-line bodies
+- Use PHP 8 constructor property promotion
+
+### Type Declarations
+
+Always use explicit types for parameters, return types, and properties:
+
+```php
+protected function isAccessible(User $user, ?string $path = null): bool
+{
+    // ...
+}
+```
+
+### Enums
+
+- Keys in **TitleCase**: `FavoritePerson`, `Monthly`, `Active`
+- Use backed enums (`string` or `int`) when persisting to database
+
+### Naming Conventions
+
+| Element   | Style         | Example                        |
+| --------- | ------------- | ------------------------------ |
+| Classes   | PascalCase    | `CreateNewUser`                |
+| Methods   | camelCase     | `resolveFromRequest()`         |
+| Variables | camelCase     | `$correlationId`               |
+| Booleans  | is/has/can/should | `$isActive`, `hasPermission()` |
+| Constants | UPPER_SNAKE   | `MAX_RETRIES`                  |
+
+### PHPDoc
+
+- Prefer PHPDoc blocks over inline comments
+- Add array shape type definitions when appropriate
+- Never use inline comments unless logic is exceptionally complex
 
 ### Fluent APIs
 
-Prefer fluent, expressive APIs:
+Prefer fluent, expressive interfaces when designing classes:
 
 ```php
-// ✅ Good: Fluent and readable
 LaravelTracing::correlation()
     ->fromHeader('X-Correlation-Id')
     ->persistInSession()
     ->attachToResponse();
-
-// ❌ Bad: Configuration array soup
-$tracing->configure([
-    'correlation' => [
-        'header' => 'X-Correlation-Id',
-        'session' => true,
-        'response' => true,
-    ],
-]);
 ```
+
+---
+
+## Laravel Conventions
+
+### Artisan Commands
+
+- Use `php artisan make:` commands to create files (migrations, controllers, models, etc.)
+- For generic PHP classes, use `php artisan make:class`
+- Always pass `--no-interaction` and the correct `--options` to artisan commands
+- When creating models, also create factories and seeders — check available options via `php artisan make:model --help`
+
+### Database & Eloquent
+
+- Use Eloquent models and relationships — avoid `DB::` facade; prefer `Model::query()`
+- Prevent N+1 queries with eager loading (`with()`)
+- Laravel 12 supports limiting eager loaded records natively: `$query->latest()->limit(10)`
+- Use relationship methods with return type hints
+- Define casts in a `casts()` method (not `$casts` property) — follow existing model patterns
+- Migrations must include all column attributes when modifying (Laravel 12 drops unspecified attributes)
+
+### Controllers & Validation
+
+- Always use Form Request classes for validation — never inline in controllers
+- Check sibling Form Requests for array vs string rule format (follow existing convention)
+- Group controllers in subfolders by domain: `Http/Controllers/Settings/`
+
+### API Development
+
+- Default to Eloquent API Resources with API versioning
+- Follow existing API route conventions if they differ
+
+### Authentication & Authorization
+
+- Fortify handles headless auth (login, register, password reset, 2FA)
+- Auth actions live in `app/Actions/Fortify/`
+- Use gates and policies for authorization
 
 ### Configuration
 
-- **Never hard-code values** that might change
-- **Use config files** (`config/laravel-tracing.php`)
-- **Allow environment variable overrides**
-- **Provide sensible defaults** (zero-config when possible)
+- **Never use `env()` outside config files** — always `config('key')`
+- Use environment variables only in `config/*.php`
+- Package configurations go in `config/<package>.php`
+
+### Queues & Jobs
+
+- Use `ShouldQueue` interface for time-consuming operations
+- Tracing context propagates automatically to queued jobs (via `laravel-tracing`)
+
+### URL Generation
+
+- Use named routes and `route()` function
+- Frontend: import from `@/actions/` or `@/routes/` (Wayfinder)
+
+### Internationalization (i18n)
+
+- Use `__()` helper or `trans()` for all user-facing strings
+- Translation files in `lang/` directory
+- `lucascudo/laravel-pt-br-localization` provides pt-BR translations
+- Design with i18n in mind — never hardcode user-facing text
 
 ---
 
-## Static Analysis Rules
+## Frontend Standards
 
-### Keep Code Analyzable
+### TypeScript
 
-- Avoid excessive magic methods (`__call`, `__get`, etc.)
-- Avoid runtime reflection abuse
-- Use explicit types whenever possible
-- Prefer dependency injection over service locators
+- All frontend code in TypeScript — no plain `.js` files
+- Use strict mode (`tsconfig.json`)
+- Define shared types in `resources/js/types/`
 
-### Type Declarations
+### React Components
 
-```php
-// ✅ Good: Explicit types
-public function resolve(Request $request): string
-{
-    return $request->header('X-Correlation-Id') ?? Str::uuid()->toString();
-}
+- Functional components only (no class components)
+- Use hooks for state and effects
+- Page components in `resources/js/pages/`
+- Reusable components in `resources/js/components/`
+- Layouts in `resources/js/layouts/`
 
-// ❌ Bad: No types
-public function resolve($request)
-{
-    return $request->header('X-Correlation-Id') ?? Str::uuid()->toString();
-}
+### Inertia.js
+
+- Use `Inertia::render()` for server-side routing (not Blade views)
+- Page components live in `resources/js/pages/` (configurable via `vite.config.js`)
+- Use deferred props with skeleton/pulsing loading states
+- Always use `search-docs` for version-specific Inertia documentation
+- See skill: `inertia-react-development` for patterns
+
+### Wayfinder (Route Generation)
+
+- Import from `@/actions/` (controllers) or `@/routes/` (named routes)
+- Invokable controllers: `import StorePost from '@/actions/.../StorePostController'; StorePost()`
+- Parameter binding detects route keys: `show({ slug: "my-post" })` for `{post:slug}`
+- Query merging: `show(1, { mergeQuery: { page: 2, sort: null } })` — `null` removes params
+- Inertia forms: use `.form()` with `<Form>` component or `form.submit(store())` with `useForm`
+- See skill: `wayfinder-development` for patterns
+
+### Styling
+
+- Tailwind CSS v4 utilities — follow existing patterns before adding new ones
+- Use `class-variance-authority` for component variants
+- Use `tailwind-merge` + `clsx` for conditional classes
+- Always use `search-docs` for version-specific Tailwind CSS documentation
+- See skill: `tailwindcss-development` for patterns
+
+---
+
+## Quality Tools
+
+### Running Quality Checks
+
+```bash
+# PHP
+composer lint          # format + rector + analyze (MANDATORY before commits)
+vendor/bin/pint --dirty --format agent  # During AI-assisted dev (run to fix, never --test)
+
+# JavaScript
+npm run lint           # ESLint with auto-fix
+npm run format         # Prettier
+npm run types          # TypeScript type checking
 ```
 
----
+All checks must pass before committing.
 
-## Naming Conventions
+### Static Analysis
 
-### Classes
-
-- **PascalCase**: `CorrelationIdResolver`
-- **Descriptive and specific**: Avoid generic names like `Manager`, `Handler`, `Service`
-
-### Methods
-
-- **camelCase**: `resolveFromRequest()`
-- **Verb-first for actions**: `get`, `set`, `resolve`, `attach`, `persist`
-- **Boolean methods**: prefix with `is`, `has`, `can`, `should`
-
-### Variables
-
-- **camelCase**: `$correlationId`
-- **Descriptive**: Avoid single-letter variables except in loops
+- Larastan Level 5 — strict but pragmatic
+- Avoid magic methods (`__call`, `__get`) that break analysis
+- Use explicit types everywhere
+- Prefer dependency injection over service locators
 
 ---
 
 ## Refactoring Rules
 
-### When to Refactor
-
-✅ **Do refactor:**
-- When implementing a related feature
-- When fixing a bug in the same area
-- When explicitly requested
-
-❌ **Don't refactor:**
-- Unrelated code while implementing a feature
-- Code that works and is clear (refactoring for refactoring's sake)
-- Without explicit scope and intention
-
-### Scope Rule
-
-**Refactoring must be scoped and intentional.**  
-Always ask before performing structural refactors.
+- Refactor only when implementing a related feature, fixing a bug in the area, or when explicitly requested
+- Never refactor unrelated code or code that works and is clear
+- Refactoring must be scoped and intentional — ask before structural changes
 
 ---
 
-## Existing Code First Rule
+## Consistency Rules
 
-**Before implementing anything new:**
+Before implementing anything new:
 
-1. ✅ Inspect existing code
-2. ✅ Reuse existing patterns
-3. ✅ Prefer consistency over novelty
-4. ✅ Do not introduce a new pattern if a similar one already exists
+1. Check sibling files for structure, approach, and naming
+2. Check for existing components to reuse before writing new ones
+3. Reuse existing patterns — prefer consistency over novelty
+4. Do not introduce a new pattern if a similar one exists
+5. Use descriptive names: `isRegisteredForDiscounts()`, not `discount()`
 
 **Consistency beats cleverness.**
 
 ---
 
-## Uncertainty Handling
+## Related Documentation
 
-If information is missing or ambiguous:
-
-- ❌ Do not guess
-- ❌ Do not invent APIs or behavior
-- ✅ Ask **one clear and objective question** before proceeding
-
----
-
-## Autonomy Boundaries
-
-**Claude Code must NOT:**
-
-- Introduce new architectural layers without asking
-- Change existing folder structures without confirmation
-- Add new dependencies unless explicitly requested
-- Introduce design patterns by default
-
-**When in doubt, ASK before implementing.**
-
----
-
-## Available Quality Scripts
-
-Check `composer.json` for all available scripts:
-
-```bash
-composer format   # Run Pint (code style)
-composer analyze  # Run PHPStan/Larastan (static analysis)
-composer rector   # Run Rector (automated refactoring)
-composer lint     # Run all quality checks (format + rector + analyze)
-```
-
-**Mandatory before commits**: `composer lint`
+- **[STACK.md](STACK.md)** — Complete tech stack and dependencies
+- **[WORKFLOW.md](WORKFLOW.md)** — Git workflow, commits, PRs
+- **[TESTING.md](TESTING.md)** — Testing guidelines

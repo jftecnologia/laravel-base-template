@@ -1,138 +1,149 @@
-# Claude Code – Project Guidelines
+# Claude Code — Project Guidelines
 
-This file defines **general directions only**.
-All detailed behavior must be loaded from **SKILL** and **docs/** files.
-
-This document is intentionally small.
+This is a **Laravel 12 application template** (`jftecnologia/laravel-base-template`).
+All detailed behavior is loaded from **skills** and **docs/** files.
 
 ---
 
 ## 1. Source of Truth Hierarchy
 
-When working on this repository, follow this order:
-
 1. Explicit user instructions
-2. Active SKILL files under `.claude/skills/**/SKILL.md`
+2. Active skill files under `.claude/skills/**/SKILL.md`
 3. Project documentation under `docs/`
 4. This `CLAUDE.md`
 5. Existing code patterns
 6. Framework conventions
 
-Never override a SKILL or documentation rule using assumptions.
+Never override a skill or documentation rule using assumptions.
 
 ---
 
-## 2. Skills System
+## 2. Template Development Workflow
 
-- Project behaviors are defined through **SKILL files**
-- SKILL files live at the `.claude/skills/` folder:
-  - `.claude/skills/generate-prd/SKILL.md`
-  - `.claude/skills/fix-issue/SKILL.md`
-  - etc.
+This template supports a structured AI-assisted development flow:
 
-Before performing a task:
+1. **`/generate-prd`** — Define product requirements in `docs/PRD.md`
+2. **`/generate-architecture`** — Create system architecture in `docs/architecture/`
+3. **`/generate-task-breakdown`** — Break requirements into tasks in `docs/tasks/`
+4. **`/implement-task`** — Implement individual tasks with quality gates
 
-- Search for a relevant SKILL
-- Follow it strictly
-- Do not mix responsibilities between skills
+Additional skills for development:
 
-If no SKILL exists, ask before proceeding.
+| Skill                       | When to use                                          |
+| --------------------------- | ---------------------------------------------------- |
+| `inertia-react-development` | React pages, forms, navigation with Inertia v2       |
+| `tailwindcss-development`   | Styling and UI changes with Tailwind CSS v4          |
+| `wayfinder-development`     | Referencing backend routes in frontend (Wayfinder)   |
+| `pest-testing`              | Writing or debugging PestPHP tests                   |
+| `generate-test`             | Generating PestPHP tests for existing code           |
+| `developing-with-fortify`   | Authentication features (login, 2FA, password reset) |
+| `security-analyst`          | OWASP Top 10 security review                         |
+| `skill-creator`             | Creating new skills                                  |
 
----
-
-## 3. Project Documentation
-
-- All project documentation lives under `docs/`
-- Claude Code must:
-  - Search `docs/` before asking questions
-  - Prefer existing documents over assumptions
-  - Write new documentation only inside `docs/`
-  - Update and maintain documentation updated after a change, inclusion or exclusion in the requirements or architecture
-
-### Documentation Structure
-
-**Product Requirements:**
-- `docs/PRD.md` – Complete product requirements document (features, scope, requirements)
-- `docs/use-cases/*.md` – Optional detailed scenarios and integration patterns
-
-**Architecture:**
-- `docs/architecture/*.md` – System architecture, component design, data flows, extension points
-
-**Task Breakdown & Progress:**
-- `docs/tasks/*.md` – Executable development tasks organized by epics with acceptance criteria
-- `docs/progress/*.md` – Progress tracking with status, commits, notes, and blockers
-
-**Engineering Documentation:**
-- `docs/engineering/STACK.md` – Tech stack, dependencies, available scripts
-- `docs/engineering/CODE_STANDARDS.md` – Code quality, development philosophy, tooling
-- `docs/engineering/WORKFLOW.md` – Git workflow, commits, PRs, development cycle
-- `docs/engineering/TESTING.md` – Testing guidelines and practices
-
-**General:**
-- `README.md` – Installation, usage, configuration (user-facing documentation)
+Before performing a task: search for a relevant skill, follow it strictly, do not mix responsibilities.
 
 ---
 
-## 4. Development Philosophy (High-Level)
+## 3. How to Find Information
 
-- No DDD
-- No unnecessary abstraction
+### Documentation (`docs/`)
+
+| Topic                   | Location                         |
+| ----------------------- | -------------------------------- |
+| Product requirements    | `docs/PRD.md`                    |
+| System architecture     | `docs/architecture/*.md`         |
+| Development tasks       | `docs/tasks/*.md`                |
+| Progress tracking       | `docs/progress/*.md`             |
+| Tech stack              | `docs/engineering/STACK.md`      |
+| Code standards          | `docs/engineering/CODE_STANDARDS.md` |
+| Git workflow            | `docs/engineering/WORKFLOW.md`   |
+| Testing guidelines      | `docs/engineering/TESTING.md`    |
+
+Search `docs/` before asking questions. Prefer existing documents over assumptions.
+
+### Laravel Boost (MCP Tools)
+
+Always use `search-docs` before making code changes to ensure correct approach. Use multiple broad queries: `['rate limiting', 'routing rate limiting', 'routing']`. Do not add package names to queries.
+
+Other useful tools: `tinker`, `database-schema`, `database-query`, `last-error`, `browser-logs`, `list-routes`, `get-absolute-url`.
+
+---
+
+## 4. Development Philosophy
+
+- No DDD — no unnecessary abstraction
 - Prefer clarity over cleverness
 - SOLID, pragmatically applied
 - Configuration over hard-coded logic
-- Extensible and plugable by default
+- Extensible and pluggable by default
 - Fluent classes
+- Design for internationalization (i18n)
 
-**For complete standards and tooling, see:** `docs/engineering/CODE_STANDARDS.md`
+**Complete standards**: `docs/engineering/CODE_STANDARDS.md`
 
 ---
 
-## 5. Language Rules
+## 5. Application Structure
+
+```
+app/
+├── Actions/          # Single-purpose actions (grouped by domain)
+├── Enums/            # PHP enums
+├── Extensions/       # Package customizations (non-domain logic)
+├── Http/             # Controllers, Middleware, Requests
+├── Models/           # Eloquent models
+├── Providers/        # Service providers
+└── Support/          # Helpers (helpers.php)
+```
+
+Key conventions:
+- **Actions** for single-purpose operations, **Services** for orchestration
+- **Extensions** for package customizations only (not domain logic)
+- **Exceptions** via `php artisan make:app-exception` (uses `jftecnologia/laravel-exceptions`)
+- **Form Requests** for all validation (never inline in controllers)
+- **Named routes** + Wayfinder for frontend route references
+
+---
+
+## 6. Quality Gates
+
+Before commits:
+```bash
+composer lint                    # PHP: format + rector + analyze (MANDATORY)
+npm run lint && npm run types    # JS/TS: ESLint + TypeScript
+```
+
+Before PRs: also run `composer test`.
+
+During AI development: `vendor/bin/pint --dirty --format agent`
+
+---
+
+## 7. Language Rules
 
 - Code, commits, branches, PRs: **English**
 - Conversation with the user: **Portuguese (pt-BR)**
 
 ---
 
-## 6. Uncertainty Handling
-
-If information is missing or ambiguous:
-
-- Do not guess
-- Do not invent APIs or behavior
-- Ask **one clear and objective question**
-
----
-
-## 7. Execution Boundary
+## 8. Execution Boundaries
 
 Claude Code must NOT:
-
 - Introduce new architectural layers without asking
 - Change existing folder structures without confirmation
 - Add new dependencies unless explicitly requested
 - Introduce design patterns by default
+- Create documentation files unless explicitly requested
 
-When in doubt, ask.
+Communication: be concise — focus on what's important, not obvious details.
 
----
-
-## 8. Quick Reference
-
-For specific guidance on:
-
-| Topic                         | See                                  |
-| ----------------------------- | ------------------------------------ |
-| **What to build**             | `docs/PRD.md`                        |
-| **System architecture**       | `docs/architecture/`                 |
-| **Development tasks**         | `docs/tasks/`                        |
-| **Progress tracking**         | `docs/progress/`                     |
-| **Tech stack & dependencies** | `docs/engineering/STACK.md`          |
-| **Code quality & standards**  | `docs/engineering/CODE_STANDARDS.md` |
-| **Git workflow & commits**    | `docs/engineering/WORKFLOW.md`       |
-| **Testing practices**         | `docs/engineering/TESTING.md`        |
-| **Installation & usage**      | `README.md`                          |
+If information is missing or ambiguous: do not guess, ask **one clear question**.
 
 ---
 
-This file defines **direction**, not implementation.
+## 9. Documentation Maintenance
+
+After changes that affect requirements or architecture:
+- Update relevant docs in `docs/`
+- Keep `docs/PRD.md` as a **template** (filled by `/generate-prd` skill)
+- Write new documentation only inside `docs/`
