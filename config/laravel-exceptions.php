@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types = 1);
+use App\Extensions\LaravelExceptions\Channels\LaravelContextChannel;
 
 return [
     'view' => 'laravel-exceptions::error',
@@ -22,11 +23,12 @@ return [
 
     'channels' => [
         'database' => JuniorFontenele\LaravelExceptions\Channels\Database::class,
+        'laravel_log' => LaravelContextChannel::class,
     ],
 
     'channels_settings' => [
         'database' => [
-            'table_name' => 'exceptions_log',
+            'table_name' => 'sys_exceptions',
             'model' => JuniorFontenele\LaravelExceptions\Models\Exception::class,
             'user_model' => config('auth.providers.users.model'),
             'user_model_table' => 'users',
