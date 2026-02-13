@@ -25,17 +25,23 @@ Read the following files in order to understand what needs to be built:
     - Extension points
     - Technical decisions
 
-3. **Use Cases** (if exist): `docs/use-cases/*.md`
+3. **UI Design** (if exists): `docs/design/*.md`
+    - Design system (colors, typography, spacing)
+    - Page inventory (screens, layouts, auth requirements)
+    - Component hierarchy (reuse strategy, new components)
+    - Interaction patterns (forms, navigation, feedback)
+
+4. **Use Cases** (if exist): `docs/use-cases/*.md`
     - Specific user scenarios
     - Edge cases
     - Integration patterns
 
-4. **Workflow Guidelines**: `docs/engineering/WORKFLOW.md`
+5. **Workflow Guidelines**: `docs/engineering/WORKFLOW.md`
     - Development process
     - Testing requirements
     - Quality standards
 
-5. **Existing Progress** (if exist): `docs/progress/*.md`
+6. **Existing Progress** (if exist): `docs/progress/*.md`
     - Current task status
     - What needs to be resumed
     - Previous blockers or failures
@@ -580,6 +586,27 @@ For tasks adding extension points:
 - Required methods: `resolve(Request $request): string`
 - Registration: Via config `laravel-tracing.sources.custom`
 - Example: See `docs/architecture/EXTENSIONS.md`
+```
+
+### Frontend Task
+
+For tasks implementing UI pages/components (when `docs/design/` exists):
+
+```markdown
+**Design Reference**:
+
+- Page: [PAGE_INVENTORY.md page name]
+- Components: [COMPONENTS.md component names]
+- Interactions: [INTERACTIONS.md pattern names]
+- Design System: [relevant tokens from DESIGN_SYSTEM.md]
+
+**Acceptance Criteria** (include visual/interaction ACs):
+
+- [ ] AC-X: Page matches PAGE_INVENTORY.md section layout
+- [ ] AC-X: Uses existing `ui/` components listed in COMPONENTS.md
+- [ ] AC-X: Loading states use skeleton pattern from INTERACTIONS.md
+- [ ] AC-X: Empty states follow pattern from INTERACTIONS.md
+- [ ] AC-X: `npm run lint && npm run types` passes
 ```
 
 ### Documentation Task

@@ -24,16 +24,15 @@ This template supports a structured AI-assisted development flow:
 
 1. **`/generate-prd`** — Define product requirements in `docs/PRD.md`
 2. **`/generate-architecture`** — Create system architecture in `docs/architecture/`
-3. **`/generate-task-breakdown`** — Break requirements into tasks in `docs/tasks/`
-4. **`/implement-task`** — Implement individual tasks with quality gates
+3. **`/generate-ui-design`** — Define UI/UX design specifications in `docs/design/`
+4. **`/generate-task-breakdown`** — Break requirements into tasks in `docs/tasks/`
+5. **`/implement-task`** — Implement individual tasks with quality gates
 
 Additional skills for development:
 
 | Skill                       | When to use                                          |
 | --------------------------- | ---------------------------------------------------- |
-| `inertia-react-development` | React pages, forms, navigation with Inertia v2       |
-| `tailwindcss-development`   | Styling and UI changes with Tailwind CSS v4          |
-| `wayfinder-development`     | Referencing backend routes in frontend (Wayfinder)   |
+| `frontend-development`      | React + Inertia + Tailwind + Radix UI + Wayfinder    |
 | `pest-testing`              | Writing or debugging PestPHP tests                   |
 | `generate-test`             | Generating PestPHP tests for existing code           |
 | `developing-with-fortify`   | Authentication features (login, 2FA, password reset) |
@@ -52,6 +51,7 @@ Before performing a task: search for a relevant skill, follow it strictly, do no
 | ----------------------- | -------------------------------- |
 | Product requirements    | `docs/PRD.md`                    |
 | System architecture     | `docs/architecture/*.md`         |
+| UI/UX design specs      | `docs/design/*.md`               |
 | Development tasks       | `docs/tasks/*.md`                |
 | Progress tracking       | `docs/progress/*.md`             |
 | Tech stack              | `docs/engineering/STACK.md`      |
