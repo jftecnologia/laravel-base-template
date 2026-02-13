@@ -4,20 +4,21 @@ declare(strict_types = 1);
 
 namespace App\Extensions\ActivityLog;
 
+use App\Enums\LogLevel;
 use Spatie\Activitylog\Contracts\Activity as ActivityContract;
 
 class ActivityLogger extends \Spatie\Activitylog\ActivityLogger
 {
-    protected string $logLevel = 'info';
+    protected LogLevel $logLevel = LogLevel::INFORMATIONAL;
 
-    public function logLevel(string $logLevel): static
+    public function logLevel(LogLevel $logLevel): static
     {
         $this->logLevel = $logLevel;
 
         return $this;
     }
 
-    public function level(string $logLevel): static
+    public function level(LogLevel $logLevel): static
     {
         return $this->logLevel($logLevel);
     }
