@@ -16,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(PendingActivityLog::class, function ($app) {
             return new \App\Extensions\ActivityLog\PendingActivityLog(
-                $app->make(\Spatie\Activitylog\ActivityLogger::class),
+                $app->make(\App\Extensions\ActivityLog\ActivityLogger::class),
                 $app->make(\Spatie\Activitylog\ActivityLogStatus::class)
             );
         });
