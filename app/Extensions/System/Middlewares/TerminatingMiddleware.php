@@ -1,0 +1,39 @@
+<?php
+
+declare(strict_types = 1);
+
+namespace App\Extensions\System\Middlewares;
+
+use Closure;
+use Illuminate\Http\Request;
+use JuniorFontenele\LaravelContext\Facades\LaravelContext;
+use Symfony\Component\HttpFoundation\Response;
+
+class TerminatingMiddleware
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  Closure(Request): (Response)  $next
+     */
+    public function handle(Request $request, Closure $next): Response
+    {
+        return $next($request);
+    }
+
+    public function terminate(Request $request, Response $response): void
+    {
+        $responseType = match (true) {
+            $response instanceof JsonResponse => 'json',
+            $response instanceof IlluminateHttpResponse => 'html',
+            default => 'unknown',
+        };
+
+        LaravelContext::set('response', [
+            'content-type' => $response->headers->get('Content-Type'),
+            'type' => $responseType,
+            'status' => $response->getStatusCode(),
+            'size' => strlen($response->getContent() ?: ''),
+        ]);
+    }
+}

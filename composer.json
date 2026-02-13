@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "juniorfontenele/laravel-base-template",
+    "name": "jftecnologia/laravel-base-template",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
     "keywords": [
@@ -17,6 +17,9 @@
     "require": {
         "php": "^8.4",
         "inertiajs/inertia-laravel": "^2.0",
+        "jftecnologia/laravel-context": "^1.0",
+        "jftecnologia/laravel-exceptions": "^1.0",
+        "jftecnologia/laravel-tracing": "^1.0",
         "laradumps/laradumps": "^5.0",
         "laravel/fortify": "^1.30",
         "laravel/framework": "^12.0",
@@ -32,9 +35,9 @@
         "driftingly/rector-laravel": "^2.1",
         "fakerphp/faker": "^1.23",
         "larastan/larastan": "^3.0",
-        "laravel/boost": "^1.8",
+        "laravel/boost": "^2.0",
         "laravel/pail": "^1.2.2",
-        "laravel/pint": "^1.24",
+        "laravel/pint": "^1.27",
         "laravel/sail": "^1.41",
         "lucascudo/laravel-pt-br-localization": "^3.0",
         "mockery/mockery": "^1.6",

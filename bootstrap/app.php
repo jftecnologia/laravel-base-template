@@ -2,18 +2,19 @@
 
 declare(strict_types = 1);
 
-use App\Facades\System\AppException;
+use App\Extensions\LaravelContext\Middlewares\UpdateContext;
+use App\Extensions\System\Middlewares\AddSecurityHeaders;
+use App\Extensions\System\Middlewares\SetUserLocale;
+use App\Extensions\System\Middlewares\TerminatingMiddleware;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
-use App\Http\Middleware\System\AddContextToSentry;
-use App\Http\Middleware\System\AddSecurityHeaders;
-use App\Http\Middleware\System\AddTracingInformation;
-use App\Http\Middleware\System\SetUserLocale;
-use App\Http\Middleware\System\TerminatingMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
+use JuniorFontenele\LaravelExceptions\Facades\LaravelException;
+use JuniorFontenele\LaravelTracing\Middleware\IncomingTracingMiddleware;
+use JuniorFontenele\LaravelTracing\Middleware\OutgoingTracingMiddleware;
 use Sentry\Laravel\Integration;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -25,22 +26,23 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 
-        $middleware->append([
-            TerminatingMiddleware::class,
-        ]);
-
         $middleware->web(append: [
             SetUserLocale::class,
-            AddTracingInformation::class,
-            AddContextToSentry::class,
+            IncomingTracingMiddleware::class,
+            OutgoingTracingMiddleware::class,
             AddSecurityHeaders::class,
             HandleAppearance::class,
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
+            UpdateContext::class,
+        ]);
+
+        $middleware->append([
+            TerminatingMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         Integration::handles($exceptions);
 
-        AppException::handles($exceptions);
+        LaravelException::handles($exceptions);
     })->create();
